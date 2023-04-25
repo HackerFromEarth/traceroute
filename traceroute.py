@@ -51,7 +51,7 @@ def build_packet():
     myChecksum = 0
     myID = os.getpid() & 0xFFFF
 
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 8, myChecksum, myID, 1)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, myID, 1)
     data = struct.pack("d", time.time())
     # Append checksum to the header.
     myChecksum = checksum(header + data)    
@@ -112,15 +112,15 @@ def get_route(hostname):
 
                 if request_type == 11:
                     bytes = struct.calcsize("d")
-                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[8]
                     print (" %d   rtt=%.0f ms %s" % (ttl,(timeReceived -t)*1000, addr[0]))
                 elif request_type == 3:
                     bytes = struct.calcsize("d")
-                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[8]
                     print (" %d   rtt=%.0f ms %s" % (ttl,(timeReceived -t)*1000, addr[0]))
                 elif request_type == 0:
                     bytes = struct.calcsize("d")
-                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[8]
                     print (" %d   rtt=%.0f ms %s" % (ttl,(timeReceived -timeSent)*1000, addr[0]))
                     return
                 else:
