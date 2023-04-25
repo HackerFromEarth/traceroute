@@ -51,7 +51,7 @@ def build_packet():
     myChecksum = 0
     myID = os.getpid() & 0xFFFF
 
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, myID, 1)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 8, myChecksum, myID, 1)
     data = struct.pack("d", time.time())
     # Append checksum to the header.
     myChecksum = checksum(header + data)    
@@ -61,7 +61,7 @@ def build_packet():
     else:
         myChecksum = htons(myChecksum)
 
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, myID, 1)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 8, myChecksum, myID, 1)
     # Don’t send the packet yet , just return the final packet in this function.
     #Fill in end
 
