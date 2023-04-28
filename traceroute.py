@@ -70,7 +70,7 @@ def get_route(hostname):
  
             #Fill in start
             # Make a raw socket named mySocket
-            mySocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+            mySocket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)
             #Fill in end
 
             mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
@@ -85,7 +85,9 @@ def get_route(hostname):
                 if whatReady[0] == []: # Timeout
                     #Fill in start
                     #append response to your dataframe including hop #, try #, and "timeout" responses as required by the acceptance criteria
-                    df = df.append({"Hop Count": ttl, "Try": tries+1, "IP": "Undefined", "Hostname": "Undefined", "Response Code": "Timeout"})
+                    resp = [[ttl, tries+1, "Undefined", "Undefined", "Timeout"]]
+                    new_df = pd.DataFrame(resp, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
+                    df = pd.concat([df, new_df], ignore_index=True)
                     print (df)
                     #Fill in end
                 recvPacket, addr = mySocket.recvfrom(1024)
@@ -94,7 +96,9 @@ def get_route(hostname):
                 if timeLeft <= 0:
                     #Fill in start
                     #append response to your dataframe including hop #, try #, and "timeout" responses as required by the acceptance criteria
-                    df = df.append({"Hop Count": ttl, "Try": tries+1, "IP": "Undefined", "Hostname": "Undefined", "Response Code": "Timeout"})
+                    resp = [[ttl, tries+1, "Undefined", "Undefined", "Timeout"]]
+                    new_df = pd.DataFrame(resp, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
+                    df = pd.concat([df, new_df], ignore_index=True)
                     print (df)
                     #Fill in end
             except Exception as e:
@@ -126,6 +130,7 @@ def get_route(hostname):
                     #You should update your dataframe with the required column field responses here
                     resp = [[ttl, addr[0], routerHostname, code]]
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'IP', 'Hostname', 'Response Code'])
+                    df = pd.concat([df, new_df], ignore_index=True)
                     #Fill in end
                 elif types == 3:
                     bytes = struct.calcsize("d")
@@ -134,6 +139,7 @@ def get_route(hostname):
                     #You should update your dataframe with the required column field responses here
                     resp = [[ttl, addr[0], routerHostname, code]]
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'IP', 'Hostname', 'Response Code'])
+                    df = pd.concat([df, new_df], ignore_index=True)
                     #Fill in end
                 elif types == 0:
                     bytes = struct.calcsize("d")
@@ -142,6 +148,7 @@ def get_route(hostname):
                     #You should update your dataframe with the required column field responses here
                     resp = [[ttl, addr[0], routerHostname, code]]
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'IP', 'Hostname', 'Response Code'])
+                    df = pd.concat([df, new_df], ignore_index=True)
                     #Fill in end
                     return df
                 else:
@@ -150,6 +157,7 @@ def get_route(hostname):
                     error = "error occurred"
                     resp = [[ttl, addr[0], routerHostname, error]]
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'IP', 'Hostname', 'Response Code'])
+                    df = pd.concat([df, new_df], ignore_index=True)
                     #Fill in end
                 break
     return df
