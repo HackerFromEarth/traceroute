@@ -1,4 +1,6 @@
 # traceroute
+As part of a course I took during education:
+
 Implementing a traceroute application using ICMP request and reply messages.
 
 Traceroute is a computer networking diagnostic tool which allows a user to trace the route from a host running the traceroute program to any other host 
